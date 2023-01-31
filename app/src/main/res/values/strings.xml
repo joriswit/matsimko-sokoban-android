@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sokoban</string>
+    <string name="reset">Reset</string>
+    <string name="next_level">Next level</string>
+    <string name="previous_level">Previous level</string>
+    <string name="refresh">Refresh</string>
+    <string name="show_scores">Show scores</string>
+    <string name="scores">Scores</string>
+</resources>

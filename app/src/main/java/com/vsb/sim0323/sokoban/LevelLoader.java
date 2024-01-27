@@ -41,5 +41,24 @@ public class LevelLoader {
         return levels;
     }
 
+    public String saveLevel(Level level) {
+        int[] data = level.getData();
+
+        Map<Integer, Character> reverseConverterMap = new HashMap<>();
+        for(Map.Entry<Character, Integer> entry : converterMap.entrySet()){
+            reverseConverterMap.put(entry.getValue(), entry.getKey());
+        }
+
+        int width = level.getWidth();
+        StringBuilder result = new StringBuilder();
+        for (int y = 0; y < level.getHeight(); y++) {
+            for (int x = 0; x < width; x++) {
+                result.append(reverseConverterMap.get(data[y * width + x]));
+            }
+            result.append("\n");
+        }
+        return result.toString();
+    }
+
     //close the IS or use enhanced try
 }

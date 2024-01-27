@@ -2,7 +2,10 @@ package com.vsb.sim0323.sokoban;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -101,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Intent solverIntent = new Intent("nl.joriswit.sokosolver.SOLVE");
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(solverIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        boolean isSolverInstalled = activities.size() > 0;
+        menu.findItem(R.id.solverMenuItem).setEnabled(isSolverInstalled);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
@@ -108,8 +123,25 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LevelSelectionActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.solverMenuItem:
+                Intent solverIntent = new Intent("nl.joriswit.sokosolver.SOLVE");
+                solverIntent.putExtra("LEVEL", new LevelLoader(null).saveLevel(level));
+                startActivityForResult(solverIntent, SOLVER_REQUEST_CODE);
+                return true;
             default:
                 return true;
+        }
+    }
+
+    public static final int SOLVER_REQUEST_CODE = 9522;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SOLVER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            String result = data.getStringExtra("SOLUTION");
+            sokoView.setControls(new ReplaySolutionSokoControls(result));
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

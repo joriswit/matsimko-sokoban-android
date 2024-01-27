@@ -93,6 +93,28 @@ public class SokoView extends BaseSokoView {
                     }
                 };
                 moveCount = Math.abs(dy);
+            } else if (controls instanceof ReplaySolutionSokoControls) {
+                ReplaySolutionSokoControls replay = (ReplaySolutionSokoControls)controls;
+                moveCommand = new MoveCommand() {
+                    @Override
+                    public boolean canMove() {
+
+                        return !replay.isAtEndOfSolution();
+                    }
+
+                    @Override
+                    public void move() {
+
+                        Character move = replay.getNextMove();
+                        switch(Character.toLowerCase(move)) {
+                            case 'u': player.moveY(-1); break;
+                            case 'd': player.moveY(1); break;
+                            case 'l': player.moveX(-1); break;
+                            case 'r': player.moveX(1); break;
+                        }
+                    }
+                };
+                moveCount = replay.getSolutionLength();
             }
 
 

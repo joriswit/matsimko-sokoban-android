@@ -5,4 +5,7 @@
     <item
         android:id="@+id/levelsMenuItem"
         android:title="Levels" />
+    <item
+        android:id="@+id/solverMenuItem"
+        android:title="Start solver" />
 </menu>
